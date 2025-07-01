@@ -1,0 +1,15 @@
+.org-chart-container {
+  padding: 0;
+  text-align: center;
+  overflow: auto;
+  background-color: #f1f3f5;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  height: auto;
+}
+
+.node-card {
+  word-break: break-word;
+  text-align: center;
+  min-width: 160px;
+  padding: 8px;
+}

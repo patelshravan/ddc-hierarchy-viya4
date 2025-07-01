@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddc-orgchart-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ddc-orgchart
+  template:
+    metadata:
+      labels:
+        app: ddc-orgchart
+    spec:
+      containers:
+        - name: ddc-server
+          image: shravan014/ddc-orgchart:latest
+          workingDir: /app
+          command: ["/bin/sh", "-c"]
+          args:
+            - npm install && node app.js
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ddc-orgchart-service
+spec:
+  selector:
+    app: ddc-orgchart
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ddc-orgchart-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: sasserver.demo.sas.com
+      http:
+        paths:
+          - path: /ddc
+            pathType: Prefix
+            backend:
+              service:
+                name: ddc-orgchart-service
+                port:
+                  number: 3000
